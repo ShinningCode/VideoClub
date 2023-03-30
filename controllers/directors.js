@@ -4,10 +4,10 @@ const Director = require('../models/directors');
 
 function list(req,res,next){
   Director.find().then(objs=>res.status(200).json({
-    message: "Director´s list",
+    message: "Director's list",
     obj: objs
   })).cathc(ex => res.status(500).json({
-    message: "No se pudo realizar la consulta",
+    message: "Query could not be performed",
     obj: ex
   }));
 };
@@ -15,10 +15,10 @@ function list(req,res,next){
 function index(req,res,next){
   const id = req.params.id;
   Director.findOne({"_id":id}).then(obj => res.status(200).json({
-      message: `Director con id ${id}`,
+      message: `Director with id ${id}`,
       obj:obj
   })).catch(ex=>res.status(500).json({
-      message: `No se pudo realizar la consulta`,
+      message: `Query could not be performed`,
       obj:ex
 
   })); 
@@ -34,10 +34,10 @@ function create(req, res, next){
   });
 
   director.save().then(obj => res.status(200).json({
-      message:"Director creado correctamente",
+      message:"Director created successfully",
       obj:obj
   })).catch(ex => res.status(500).json({
-      message:"No se pudo almacenar el director",
+      message:"Could not store director",
       obj:ex
   }));
 };
@@ -54,10 +54,10 @@ function replace(req, res, next){
 
   Director.findOneAndUpdate({"_id":id},director,{new : true})
           .then(obj => {res.status(200).json({
-              message: "Director actualizado correctamente",
+              message: "Director updated successfully",
               obj:obj
           })}).catch(ex => res.status(500).json({
-              message:"No se pudo remplazar el director",
+              message:"Could not replace director",
               obj:ex
           }));
 };
@@ -78,10 +78,10 @@ function update(req, res, next){
 
   Director.findOneAndUpdate({"_id":id},director)
           .then(obj => res.status(200).json({
-              message:"Director actuaizado correctamente",
+              message:"Director updated successfully",
               obj:obj
           })).catch(ex => res.status(500).json({
-              message:"No se pudo remplazar el director",
+              message:"Could not replace director",
               obj:ex
           }));
 };
@@ -89,10 +89,10 @@ function update(req, res, next){
 function destroy(req, res, next){
   const id = req.params.id;
   Director.findByIdAndRemove({"_id":id}).then(obj => res.status(200).json({
-      message: "Director eliminado correctamente",
+      message: "Director removed successfully",
       obj:obj
   })).catch(ex => res.status(500).json({
-      message:"No se pudo eliminar el director",
+      message:"Could not remove director",
       obj:ex
   }));
 };
