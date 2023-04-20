@@ -9,6 +9,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const directorsRouter = require('./routes/directors');
 const moviesRouter = require('./routes/movies');
+const membersRouter = require('./routes/members')
 
 // "mongdb"://<dbUser>?:<dbPass>?@?<direction>:<port>/<dbName>
 const uri = "mongodb://localhost:27017/videoclub";
@@ -21,9 +22,6 @@ db.on('open',()=>{
   console.log("Conexion ok");
 })
 
-db.on('error',()=>{
-  console.log("NO se ha podido iniciar la conexion");
-})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -39,6 +37,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/directors',directorsRouter);
 app.use('/movies',moviesRouter);
+app.use('/members',membersRouter);
 
 
 
