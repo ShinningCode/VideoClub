@@ -1,3 +1,5 @@
+const ability = require('./defineAbility.js');
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -12,7 +14,7 @@ const moviesRouter = require('./routes/movies');
 const membersRouter = require('./routes/members')
 
 // "mongdb"://<dbUser>?:<dbPass>?@?<direction>:<port>/<dbName>
-const uri = "mongodb://localhost:27017/videoclub";
+const uri = "mongodb://127.0.0.1:27017/videoclub";
 mongoose.connect(uri);
 const db = mongoose.connection;
 
@@ -39,7 +41,12 @@ app.use('/directors',directorsRouter);
 app.use('/movies',moviesRouter);
 app.use('/members',membersRouter);
 
-
+//Abilities
+ability.can('read', 'Post') // true
+ability.can('read', 'User') // true
+ability.can('update', 'User') // true
+ability.can('delete', 'User') // false
+ability.cannot('delete', 'User') // true
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
