@@ -1,89 +1,94 @@
 const express = require('express');
-const Genre = require('../models/genre');
+const Permision = require('../models/permision');
 
 function list(req, res, next) {
-    Genre.find().then(objs => res.status(200).json({
-        message: res.__('ok.genre'),
+    Permision.find().then(objs => res.status(200).json({
+        message: res.__('ok.permision'),
         obj: objs
     })).catch(ex => res.status(500).json({
-        message: res.__('bad.genre'),
+        message: res.__('bad.permision'),
         obj: ex
     }));
 }
 
 function index(req, res, next) {
     const id = req.params.id;
-    Genre.findOne({"_id":id}).then(obj => res.status(200).json({
-        message: res.__('ok.genre'), // Interpolacion
+    Permision.findOne({"_id":id}).then(obj => res.status(200).json({
+        message: res.__('ok.permision'),
         obj: obj
     })).catch(ex => res.status(500).json({
-        message: res.__('bad.genre'),
+        message: res.__('bad.permision'),
         obj:ex
     }));
 }
 
 function create(req, res, next) {
+    let type = req.body.type;
     let description = req.body.description;
 
-    let genre = new Genre({
-        description:description,
+    let permision = new Permision({
+        type:type,
+        description:description
     });
 
-    genre.save().then(obj => res.status(200).json({
-        message: res.__('ok.genre'),
+    permision.save().then(obj => res.status(200).json({
+        message: res.__('ok.permision'),
         obj:obj
     })).catch(ex => res.status(500).json({
-        message: res.__('bad.genre'),
+        message: res.__('bad.permision'),
         ex:ex
     }));
 }
 
 function replace(req, res, next) {
     const id = req.params.id;
+    let type = req.body.type ? req.body.type : "";
     let description = req.body.description ? req.body.description : "";
 
-    let Genre = new Object({
-        _description: description,
+    let Permision = new Object({
+        _type:type,
+        _description: description
     });
-   
-    Genre.findOneAndUpdate({"_id":id},Genre,{new : true})
+    
+    Permision.findOneAndUpdate({"_id":id},Permision,{new : true})
             .then(obj => res.status(200).json({
-                message: res.__('ok.genre'),
+                message: res.__('ok.permision'),
                 obj: obj
             })).catch(ex => res.status(500).json({
-                message: res.__('bad.genre'),
+                message: res.__('bad.permision'),
                 obj:ex
             }));
 }
 
 function update(req, res, next) {
     const id = req.params.id;
+    let type = req.body.type;
     let description = req.body.description;
 
-    let Genre = new Object(); 
+    let Permision = new Object(); 
 
     if(description){
-        Genre._name = description;
+        Permision._name = description;
     }
 
-    Genre.findOneAndUpdate({"_id":id},Genre)
+    Permision.findOneAndUpdate({"_id":id},Permision)
             .then(obj => res.status(200).json({
-                message: res.__('ok.genre'),
+                message: res.__('ok.permision'),
                 obj:obj
             })).catch(ex => res.status(500).json({
-                message: res.__('bad.genre'),
+                message: res.__('bad.permision'),
                 obj:ex
             }));
 }
 
 function destroy(req, res, next) {
     const id = req.params.id;
-    Genre.findByIdAndRemove({"_id":id})
+    Permision.findByIdAndRemove({"_id":id})
             .then(obj => res.status(200).json({
-                message: res.__('ok.genre'),
+                message: res.__('ok.permision'),
                 obj:obj
             })).catch(ex => res.status(500).json({
-                message: res.__('bad.genre'),
+                message: res.__('bad.permision'),
                 obj:ex
             }));
 }

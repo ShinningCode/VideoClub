@@ -1,4 +1,22 @@
 {
-    "ok.login":"Sesion iniciada correctamente",
-    "bad.login":"Usuario y/o contraseña incorrectos"
+    "ok.login": "Inicio de sesión exitoso",
+    "bad.login": "El usuario o la contraseña son incorrectos",
+    "ok.genre": "Respuesta de género obtenida con éxito",
+    "bad.genre": "No se obtuvo respuesta para el género",
+    "ok.member": "Respuesta de miembro obtenida con éxito",
+    "bad.member": "No se obtuvo respuesta para el miembro",
+    "ok.movie": "Respuesta de película obtenida con éxito",
+    "bad.movie": "No se obtuvo respuesta para la película",
+    "ok.permission": "Respuesta de permisos obtenida con éxito",
+    "bad.permission": "No se obtuvo respuesta para los permisos",
+    "ok.user": "Respuesta de usuario obtenida con éxito",
+    "bad.user": "No se obtuvo respuesta para el usuario",
+    "ok.director": "Respuesta de director obtenida con éxito",
+    "bad.director": "No se obtuvo respuesta para el director",
+    "ok.copy": "Respuesta de copia obtenida con éxito",
+    "bad.copy": "No se obtuvo respuesta para la copia",
+    "ok.booking": "Respuesta de reserva obtenida con éxito",
+    "bad.booking": "No se obtuvo respuesta para la reserva",
+    "ok.actor": "Respuesta de actor obtenida con éxito",
+    "bad.actor": "No se obtuvo respuesta para el actor"
 }

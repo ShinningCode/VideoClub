@@ -1,65 +1,54 @@
 const express = require('express');
-const Member = require('../models/member');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const config = require('config');
 
-function list(req, res, next) {
-    Member.find().then(objs => res.status(200).json({
-        message: "Listado de socios",
-        obj: objs
-    })).catch(ex => res.status(500).json({
-        message: "No se pudo mostrar los socios",
-        obj:ex
-    }));
+function home(req, res, next){
+    res.render('index', {title: 'Express'});
 }
 
-function index(req, res, next) {
-    res.send(`respond with a index of a actor= ${req.params.id}`);
-}
+function login(req, res, next){
+    const email = req.body.email;
+    const password = req.body.password;
+    const jwtKey = config.get("secret.key");
 
-function create(req, res, next) {
-    let name = req.body.name;
-    let lastName = req.body.lastName;
-    let phone = req.body.phone;
-    //Address es un objeto embebido por lo cual se construye de la siguiente manera
-    let address = new Object();
-    address.street = req.body.street;
-    address.number = req.body.number;
-    address.zip = req.body.zip;
-    address.state = req.body.state;
-
-    let member = new Member({
-        name: name,
-        lastName: lastName,
-        phone: phone,
-        address: address
-    });
-
-    member.save().then(obj => res.status(200).json({
-        message: "Socio creado correctamente",
-        obj: obj
-    })).catch(ex => res.status(500).json({
-        message: "No se pudo almacenar el socio",
+    User.findOne({"_email":email}).select('_password _salt').then(user =>{
+        console.log(user);
+        if(user){
+            bcrypt.hash(password, user.salt, (err, hash) => {
+                console.log("llego hasta aqui 2 "+hash);
+                if(err){
+                    res.status(403).json({
+                        message: res.__('bad.login'),
+                        obj: err
+                    });
+                }
+                console.log("llego hasta aqui");
+                if(hash === user.password){
+                    res.status(200).json({
+                        message: res.__('ok.login'),
+                        obj: jwt.sign({exp: Math.floor(Date.now()/1000)+6000}, jwtKey)
+                    });
+                }else{
+                    res.status(403).json({
+                        message: res.__('bad.login'),
+                        obj: null
+                    });
+                }
+            });
+        }else{
+            res.status(403).json({
+                message: res.__('bad.login'),
+                obj: null
+            });
+        }
+    }).catch(ex => res.status(403).json({
+        message: res.__('bad.login'),
         obj: ex
     }));
-    
 }
-
-function replace(req, res, next) {
-    res.send(`respond with a replace actor= ${req.params.id}`);
-}
-
-function update(req, res, next) {
-    res.send(`respond with a update actor = ${req.params.id}`);
-}
-
-function destroy(req, res, next) {
-    res.send(`respond with a destory actor= ${req.params.id}`);
-}
-
-module.exports = { 
-    list,
-    index,
-    create,
-    replace,
-    update,
-    destroy
+module.exports = {
+    home,
+    login
 };

@@ -6,4 +6,4 @@ const controller = require('../controllers/index');
 router.get('/', controller.home);
 router.post('/login', controller.login);
 
-module.exports = router;
+module.exports = router;

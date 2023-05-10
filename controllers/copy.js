@@ -1,89 +1,89 @@
 const express = require('express');
-const Booking = require('../models/booking');
+const Copy = require('../models/copy');
 
 function list(req, res, next) {
-    Booking.find().then(objs => res.status(200).json({
-        message: res.__('ok.booking'),
+    Copy.find().then(objs => res.status(200).json({
+        message: res.__('ok.copy'),
         obj: objs
     })).catch(ex => res.status(500).json({
-        message: res.__('bad.booking'),
+        message: res.__('bad.copy'),
         obj: ex
     }));
 }
 
 function index(req, res, next) {
     const id = req.params.id;
-    Booking.findOne({"_id":id}).then(obj => res.status(200).json({
-        message: res.__('ok.booking'),
+    Copy.findOne({"_id":id}).then(obj => res.status(200).json({
+        message: res.__('ok.copy'),
         obj: obj
     })).catch(ex => res.status(500).json({
-        message: res.__('bad.booking'),
+        message:res.__('bad.copy'),
         obj:ex
     }));
 }
 
 function create(req, res, next) {
-    let date = req.body.date;
+    let number = req.body.number;
 
-    let booking = new Booking({
-        date:date
+    let copy = new Copy({
+        number:number
     });
 
-    booking.save().then(obj => res.status(200).json({
-        message:res.__('ok.booking'),
+    copy.save().then(obj => res.status(200).json({
+        message: res.__('ok.copy'),
         obj:obj
     })).catch(ex => res.status(500).json({
-        message: res.__('bad.booking'),
+        message: res.__('bad.copy'),
         ex:ex
     }));
 }
 
 function replace(req, res, next) {
     const id = req.params.id;
-    let date = req.body.date ? req.body.date : "";
+    let number = req.body.number ? req.body.number : "";
 
-    let booking = new Object({
-        _number: date
+    let copy = new Object({
+        _number: number
     });
     
-    Booking.findOneAndUpdate({"_id":id},Booking,{new : true})
+    Copy.findOneAndUpdate({"_id":id},copy,{new : true})
             .then(obj => res.status(200).json({
-                message: res.__('ok.booking'),
+                message:res.__('ok.copy'),
                 obj: obj
             })).catch(ex => res.status(500).json({
-                message: res.__('bad.booking'),
+                message: res.__('bad.copy'),
                 obj:ex
             }));
 }
 
 function update(req, res, next) {
     const id = req.params.id;
-    let date = req.body.date;
+    let number = req.body.number;
 
-    let booking = new Object(); 
+    let copy = new Object(); 
 
-    if(date){
-        booking._number = date;
+    if(number){
+        copy._number = number;
     }
 
-    Booking.findOneAndUpdate({"_id":id},Booking)
+    Copy.findOneAndUpdate({"_id":id},copy)
             .then(obj => res.status(200).json({
-                message:res.__('ok.booking'),
+                message: res.__('ok.copy'),
                 obj:obj
             })).catch(ex => res.status(500).json({
-                message: res.__('bad.booking'),
+                message: res.__('bad.copy'),
                 obj:ex
             }));
 }
 
 function destroy(req, res, next) {
     const id = req.params.id;
-    Booking.findByIdAndRemove({"_id":id})
+    Copy.findByIdAndRemove({"_id":id})
             .then(obj => res.status(200).json({
-                message: res.__('ok.booking'),
+                message: res.__('ok.copy'),
                 obj:obj
             })).catch(ex => res.status(500).json({
-                message: res.__('bad.booking'),
+                message: res.__('bad.copy'),
                 obj:ex
             }));
 }
