@@ -1,109 +1,178 @@
-const express = require('express');
-const Director = require('../models/director');
 const Movie = require('../models/movie');
+const log4js = require('log4js')
+var logger = log4js.getLogger();
 
+function create(req, res, next) {
+    const {
+        genre,
+        tilte,
+        directorName,
+        directorLastName,
+        actors
+    } = req.body;
+
+    const director = new Object({
+        _name: directorName,
+        _lastName: directorLastName
+    });
+
+    let movie = new Movie({
+        genre: genre,
+        tilte: tilte,
+        director: director,
+        actors: actors
+    });
+
+    movie.save().then(obj => {
+        logger.level = "info";
+        logger.info(res.__('ok.movies.create'));
+        res.status(200).json({
+        message: res.__('ok.movies.create'),
+        objs: obj
+    })}).catch(err => {
+        logger.level = "error";
+        logger.error(res.__('error.movies.create'));
+        res.status(500).json({
+        message: res.__('error.movies.create'),
+        objs: err
+    })});
+}
 
 function list(req, res, next) {
-    Movie.find().populate("_director").then(objs => res.status(200).json({
-        message: res.__('ok.movie'),
-        obj:objs
-    })).catch(ex => res.status(500).json({
-        message: res.__('bad.movie'),
-        obj:ex
-    }));
+    Movie.find().populate('_actors').then(objs => {
+        logger.level = "info";
+        logger.info(res.__('ok.movies.list'));
+        res.status(200).json({
+        message: res.__('ok.movies.list'),
+        objs: objs
+    })}).catch(err => {
+        logger.level = "error";
+        logger.error(res.__('error.movies.list'));
+        res.status(500).json({
+        message: res.__('error.movies.list'),
+        objs: err
+    })});
 }
 
 function index(req, res, next) {
     const id = req.params.id;
-    Movie.findOne({"_id":id}).then(obj => res.status(200).json({
-        message: res.__('ok.movie'),
-        obj: obj
-    })).catch(ex => res.status(500).json({
-        message: res.__('bad.movie'),
-        obj:ex
-    }));
+    Movie.findOne({'_id':id}).populate('_actors').then(obj => {
+        logger.level = "info";
+        logger.info(res.__('ok.movies.index'));
+        res.status(200).json({
+        message: res.__('ok.movies.index'),
+        objs: obj
+    })}).catch(err => {
+        logger.level = "error";
+        logger.error(res.__('error.movies.index'));
+        res.status(500).json({
+        message: res.__('error.movies.index'),
+        objs: err
+    })}); 
 }
 
-async function create(req, res, next) {
-    const title = req.body.title;
-    const directorId = req.body.directorId;
+async function edit(req, res, next) {
+    const id = req.params.id;
+    const movie = await Movie.findOne({'_id':id});
 
-    let director = await Director.findOne({"_id":directorId});
+    const {
+        genre,
+        title,
+        directorName,
+        directorLastName,
+        actors,
+    } = req.body;
+
+    if(genre){
+        movie._genre = genre;
+    }
     
-    let movie = new Movie({
-        title:title,
-        director:director
-    });
+    if(title){
+        movie._title = title;
+    }
 
-    movie.save()
-         .then(obj => res.status(200).json({
-            message: res.__('ok.movie'),
-            obj:obj
-         }))
-         .catch(ex => res.status(500).json({
-            message: res.__('bad.movie'),
-            obj:ex
-         }));
+    if(directorName){
+        movie._director.set('_name', directorName);
+    }
+    
+    if(directorLastName){
+        movie._director.set('_lastName', directorLastName);
+    }
 
+    if(actors){
+        movie._actors = actors;
+    }
+    
+
+    movie.save().then(obj => {
+        logger.level = "info";
+        logger.info(res.__('ok.movies.edit'));
+        res.status(200).json({
+        message: res.__('ok.movies.edit'),
+        objs: obj
+    })}).catch(err => {
+        logger.level = "error";
+        logger.error(res.__('error.movies.edit'));
+        res.status(500).json({
+        message: res.__('error.movies.edit'),
+        objs: err
+    })}); 
 }
 
 function replace(req, res, next) {
-    const directorId = req.body.directorId ? req.body.directorId : "";
-    let title = req.body.title ? req.body.title : "";
+    const id = req.params.id;
+    const {
+        genre,
+        title,
+        directorName,
+        directorLastName,
+        actors,
+    } = req.body;
 
-    let Movie = new Object({
-        _title: title,
-        _directorId: directorId
+    const director = new Object({
+        _name: directorName,
+        _lastName: directorLastName
     });
-  
-    Movie.findOneAndUpdate({"_id":id},Movie,{new : true})
-            .then(obj => res.status(200).json({
-                message: res.__('ok.movie'),
-                obj: obj
-            })).catch(ex => res.status(500).json({
-                message: res.__('bad.movie'),
-                obj:ex
-            }));
-}
 
-function update(req, res, next) {
-    const directorId = req.params.directorId;
-    let title = req.body.title;
+    let movie = new Object({
+        _genre: genre,
+        _title: title,
+        _director: director,
+        _actors: actors
+    });
 
-    let Movie = new Object(); 
-
-    if(description){
-        Movie._title = title;
-        Movie._directorId = directorId;
-    }
-
-    Permision.findOneAndUpdate({"_id":id},Permision)
-            .then(obj => res.status(200).json({
-                message: res.__('ok.permision'),
-                obj:obj
-            })).catch(ex => res.status(500).json({
-                message: res.__('bad.permision'),
-                obj:ex
-            }));
+    Movie.findOneAndReplace({'_id':id}, movie).then(obj => {
+        logger.level = "info";
+        logger.info(res.__('ok.movies.replace'));
+        res.status(200).json({
+        message: res.__('ok.movies.replace'),
+        objs: obj
+    })}).catch(err => {
+        logger.level = "error";
+        logger.error(res.__('error.movies.replace'));
+        res.status(500).json({
+        message: res.__('error.movies.replace'),
+        objs: err
+    })}); 
 }
 
 function destroy(req, res, next) {
     const id = req.params.id;
-    Movie.findByIdAndRemove({"_id":id})
-            .then(obj => res.status(200).json({
-                message: res.__('ok.permision'),
-                obj:obj
-            })).catch(ex => res.status(500).json({
-                message: res.__('bad.permision'),
-                obj:ex
-            }));
+    Movie.remove({'_id':id}).then(obj => {
+        logger.level = "info";
+        logger.info(res.__('ok.movies.destroy'));
+        res.status(200).json({
+        message: res.__('ok.movies.destroy'),
+        objs: obj
+    })}).catch(err => {
+        logger.level = "error";
+        logger.error(res.__('error.movies.destroy'));
+        res.status(500).json({
+        message: res.__('error.movies.destroy'),
+        objs: err
+    })}); 
 }
 
-module.exports = { 
-    list,
-    index,
-    create,
-    replace,
-    update,
-    destroy
-};
+module.exports = {
+    create, list, index, edit, replace, destroy
+}

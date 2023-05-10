@@ -11,68 +11,68 @@ const schema = mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'Permision'
     }]
-
 });
 
 class User {
-    constructor(name,lastName,phone){
+    constructor(name, lastName, phone, email, password, salt, permisions) {
         this._name = name;
         this._lastName = lastName;
         this._phone = phone;
         this._email = email;
         this._password = password;
         this._salt = salt;
-        this._permisions = this.permisions;
-    }
-    get name(){
-        return this._name;
-    }
-    set name(v){
-        this._name = v;
-    }
-    get lastName(){
-        return this._lastName;
-    }
-    set lastName(v){
-        this._lastName = v;
-    }
-    get phone(){
-        return this._phone;
-    }
-    set phone(v){
-        this._phone = v;
-    }
-    get email(){
-        return this._email;
+        this._permisions = permisions;
     }
 
-    set email(v){
+    get name() {
+        return this._name;
+    }
+    set name(v) {
+        this._name = v;
+    }
+
+    get lastName() {
+        return this._lastName;
+    }
+    set lastName(v) {
+        this._lastName = v;
+    }
+
+    get phone() {
+        return this._phone;
+    }
+    set phone(v) {
+        this._phone = v;
+    }
+
+    get email() {
+        return this._email;
+    }
+    set email(v) {
         this._email = v;
     }
 
-    get password(){
+    get password() {
         return this._password;
     }
-
-    set password(v){
+    set password(v) {
         this._password = v;
     }
 
-    get salt(){
+    get salt() {
         return this._salt;
     }
-
-    set salt(v){
+    set salt(v) {
         this._salt = v;
     }
-    get permisions(){
+
+    get permisions() {
         return this._permisions;
     }
-    set permisions(v){
+    set permisions(v) {
         this._permisions = v;
     }
-
 }
 
 schema.loadClass(User);
-module.exports = mongoose.model('User',schema);
+module.exports = mongoose.model('User', schema);
