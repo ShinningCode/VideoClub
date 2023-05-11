@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/members');
+const controller = require('../controllers/copy');
 
 /* GET users listing. */
 router.get('/', controller.list);

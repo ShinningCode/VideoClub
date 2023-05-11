@@ -1,4 +1,4 @@
-const ability = require('./defineAbility');
+const ability = require('../defineAbility');
 
 console.log('can read Post', ability.can('read', 'Post')) // true
 console.log('can read User', ability.can('read', 'User')) // true

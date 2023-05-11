@@ -1,29 +1,48 @@
-const ability = require('./defineAbility.js');
-
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const { accesibleRecordsPlugin } = require('@casl/mongoose');
 const mongoose = require('mongoose');
+const config = require('config');
+const i18n = require('i18n');
+const cors = require('cors');
+const {expressjwt} = require('express-jwt');
+
+//mongoose.plugin(accesibleRecordsPlugin);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const movieRouter = require('./routes/movies');
+const bookingRouter = require('./routes/booking');
+const copyRouter = require('./routes/copy');
+const genresRouter = require('./routes/genres');
+const actorsRouter = require('./routes/actors');
 const directorsRouter = require('./routes/directors');
-const moviesRouter = require('./routes/movies');
-const membersRouter = require('./routes/members')
+const membersRouter = require('./routes/members');
+const permisionsRouter = require('./routes/permisions');
+const awaitListRouter = require('./routes/awaitList');
 
-// "mongdb"://<dbUser>?:<dbPass>?@?<direction>:<port>/<dbName>
-const uri = "mongodb://127.0.0.1:27017/videoclub";
+
+const jwtKey = config.get("secret.key");
+const uri = config.get("dbChain");
 mongoose.connect(uri);
 const db = mongoose.connection;
-
 const app = express();
 
-db.on('open',()=>{
-  console.log("Conexion ok");
-})
+db.on('open', ()=> {
+  console.log("Conection ok");
+});
+db.on('error', ()=> {
+  console.log("Connection not ok");
+});
 
+i18n.configure({
+  locales:['es','en'],
+  cookie:'language',
+  directory:`${__dirname}/locales`
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,19 +53,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(i18n.init);
+app.use(cors({
+  origin: "http://127.0.0.1:5500/index.html"
+}));
 
-app.use('/', indexRouter);
+
+app.use(expressjwt({secret:jwtKey, algorithms:['HS256']})
+    .unless({path:["/login","/directors"]}));
+
+app.use('/',indexRouter);
 app.use('/users', usersRouter);
+app.use('/movies', movieRouter);
+app.use('/booking',bookingRouter);
+app.use('/copy',copyRouter);
+app.use('/genres',genresRouter);
+app.use('/actors',actorsRouter);
 app.use('/directors',directorsRouter);
-app.use('/movies',moviesRouter);
 app.use('/members',membersRouter);
+app.use('/awaitList',awaitListRouter);
 
-//Abilities
-ability.can('read', 'Post') // true
-ability.can('read', 'User') // true
-ability.can('update', 'User') // true
-ability.can('delete', 'User') // false
-ability.cannot('delete', 'User') // true
+app.use('/permisions',permisionsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

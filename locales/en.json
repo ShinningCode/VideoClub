@@ -1,0 +1,22 @@
+{
+    "ok.login": "Login successful",
+    "bad.login": "Incorrect user or password",
+    "ok.genre": "Genre response obtained successfully",
+    "bad.genre": "No response obtained for genre",
+    "ok.member": "Member response obtained successfully",
+    "bad.member": "No response obtained for member",
+    "ok.movie": "Movie response obtained successfully",
+    "bad.movie": "No response obtained for movie",
+    "ok.permission": "Permission response obtained successfully",
+    "bad.permission": "No response obtained for permission",
+    "ok.user": "User response obtained successfully",
+    "bad.user": "No response obtained for user",
+    "ok.director": "Director response obtained successfully",
+    "bad.director": "No response obtained for director",
+    "ok.copy": "Copy response obtained successfully",
+    "bad.copy": "No response obtained for copy",
+    "ok.booking": "Booking response obtained successfully",
+    "bad.booking": "No response obtained for booking",
+    "ok.actor": "Actor response obtained successfully",
+    "bad.actor": "No response obtained for actor"
+}

@@ -62,4 +62,4 @@ class Member {
 }
 
 schema.loadClass(Member);
-module.exports = mongoose.model('Member', schema);
+module.exports = mongoose.model('Member', schema);
