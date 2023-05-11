@@ -1,22 +1,65 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema({
-    _description:String
-})
+const schema = mongoose.Schema({
+    _name: String,
+    _lastName: String,
+    _phone: String,
+    _address:{
+        street: String,
+        number: String,
+        zip: Number,
+        state: String
+    }
+});
 
-class Genre {
-    constructor(description){
-        this._description = description;
+class Member {
+    constructor(name, lastName, phone, address) {
+        this._name = name;
+        this._lastName = lastName;
+        this._phone = phone;
+        this._address = address;
     }
 
-    get description(){
+    get name(){
         return this._name;
+
     }
 
-    set description(v){
-        this._description = v;
+    set name(v){
+        this._name = v;
+
+    }
+
+    get lastName(){
+        return this._lastName;
+
+    }
+
+    set lastName(v){
+        this._lastName = v;
+
+    }
+
+    get phone(){
+        return this._phone;
+
+    }
+
+    set phone(v){
+        this._phone = v;
+
+    }
+
+    get address(){
+        return this._address;
+
+    }
+
+    set address(v){
+        this._address = v;
+
     }
 }
 
-Schema.loadClass(Genre);
-module.exports = mongoose.model('Genre', Schema);
+schema.loadClass(Member);
+module.exports = mongoose.model('Member', schema);

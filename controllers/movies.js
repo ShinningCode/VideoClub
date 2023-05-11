@@ -156,6 +156,27 @@ function replace(req, res, next) {
     })}); 
 }
 
+function update(req, res, next) {
+    const id = req.params.id;
+    let type = req.body.type;
+    let description = req.body.description;
+
+    let Permision = new Object(); 
+
+    if(description){
+        Permision._name = description;
+    }
+
+    Permision.findOneAndUpdate({"_id":id},Permision)
+            .then(obj => res.status(200).json({
+                message: res.__('ok.permision'),
+                obj:obj
+            })).catch(ex => res.status(500).json({
+                message: res.__('bad.permision'),
+                obj:ex
+            }));
+}
+
 function destroy(req, res, next) {
     const id = req.params.id;
     Movie.remove({'_id':id}).then(obj => {
@@ -174,5 +195,5 @@ function destroy(req, res, next) {
 }
 
 module.exports = {
-    create, list, index, edit, replace, destroy
+    create, list, index, edit, replace, destroy, update
 }

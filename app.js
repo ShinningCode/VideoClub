@@ -7,9 +7,10 @@ const { accesibleRecordsPlugin } = require('@casl/mongoose');
 const mongoose = require('mongoose');
 const config = require('config');
 const i18n = require('i18n');
+const cors = require('cors');
 const {expressjwt} = require('express-jwt');
 
-mongoose.plugin(accesibleRecordsPlugin);
+//mongoose.plugin(accesibleRecordsPlugin);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -21,15 +22,13 @@ const actorsRouter = require('./routes/actors');
 const directorsRouter = require('./routes/directors');
 const membersRouter = require('./routes/members');
 const permisionsRouter = require('./routes/permisions');
+const awaitListRouter = require('./routes/awaitList');
+
 
 const jwtKey = config.get("secret.key");
-
-
 const uri = config.get("dbChain");
 mongoose.connect(uri);
-
 const db = mongoose.connection;
-
 const app = express();
 
 db.on('open', ()=> {
@@ -41,8 +40,8 @@ db.on('error', ()=> {
 
 i18n.configure({
   locales:['es','en'],
-  cookie: 'language',
-  directory: `${__dirname}/locales`
+  cookie:'language',
+  directory:`${__dirname}/locales`
 })
 
 // view engine setup
@@ -58,8 +57,12 @@ app.use(i18n.init);
 app.use(cors({
   origin: "http://127.0.0.1:5500/index.html"
 }));
-app.use(expressjwt({secret:jwtKey,algorithms: ['HS256']})
-   .unless({path:["/login"]}));
+
+
+app.use(expressjwt({secret:jwtKey, algorithms:['HS256']})
+    .unless({path:["/login","/directors"]}));
+
+app.use('/',indexRouter);
 app.use('/users', usersRouter);
 app.use('/movies', movieRouter);
 app.use('/booking',bookingRouter);
@@ -68,8 +71,8 @@ app.use('/genres',genresRouter);
 app.use('/actors',actorsRouter);
 app.use('/directors',directorsRouter);
 app.use('/members',membersRouter);
+app.use('/awaitList',awaitListRouter);
 
-app.use('/',indexRouter);
 app.use('/permisions',permisionsRouter);
 
 // catch 404 and forward to error handler

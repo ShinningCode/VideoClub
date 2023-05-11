@@ -113,7 +113,9 @@ function edit(req, res, next) {
         objs: err
     })});
 }
-
+function update(req, res, next) {
+    res.send(`respond with a update actor = ${req.params.id}`);
+}
 function destroy(req, res, next) {
     const id = req.params.id;
     Actor.remove({"_id":id}).then(obj => {
@@ -137,5 +139,6 @@ module.exports = {
     create,
     replace,
     edit,
-    destroy
+    destroy,
+    update
 }

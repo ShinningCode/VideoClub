@@ -1,78 +1,85 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const schema = mongoose.Schema({
-    _name:String,
-    _lastName:String,
-    _phone:String,
+    _name: String,
+    _lastName: String,
     _email: String,
     _password: String,
+    _phone: String,
     _salt: String,
-    _permisions: [{
-            type: mongoose.Schema.ObjectId,
-            ref: 'Permision'
+    _profiles: [{
+        type: mongoose.Schema.ObjectId, ref: 'Profile'
     }]
 });
 
 class User {
-    constructor(name, lastName, phone, email, password, salt, permisions) {
+    constructor(name, lastName, email, password, phone, salt){
         this._name = name;
         this._lastName = lastName;
-        this._phone = phone;
         this._email = email;
         this._password = password;
+        this._phone = phone;
         this._salt = salt;
-        this._permisions = permisions;
     }
 
-    get name() {
+    get name(){
         return this._name;
     }
-    set name(v) {
+
+    set name(v){
         this._name = v;
     }
 
-    get lastName() {
+    get lastName(){
         return this._lastName;
     }
-    set lastName(v) {
+
+    set lastName(v){
         this._lastName = v;
     }
 
-    get phone() {
-        return this._phone;
-    }
-    set phone(v) {
-        this._phone = v;
-    }
-
-    get email() {
+    get email(){
         return this._email;
     }
-    set email(v) {
+
+    set email(v){
         this._email = v;
     }
 
-    get password() {
+    get password(){
         return this._password;
     }
-    set password(v) {
+
+    set password(v){
         this._password = v;
     }
 
-    get salt() {
+    get phone(){
+        this._phone;
+    }
+
+    set phone(v){
+        this._phone = v;
+    }
+
+    get salt(){
         return this._salt;
     }
-    set salt(v) {
+
+    set salt(v){
         this._salt = v;
     }
 
-    get permisions() {
-        return this._permisions;
+    get profiles(){
+        return this._profiles;
     }
-    set permisions(v) {
-        this._permisions = v;
+
+    set profiles(v){
+        this._profiles = v;
     }
 }
 
 schema.loadClass(User);
+schema.plugin(mongoosePaginate);
 module.exports = mongoose.model('User', schema);

@@ -1,5 +1,5 @@
 const express = require('express');
-const Permision = require('../models/permision');
+const Permision = require('../models/permission');
 
 function list(req, res, next) {
     Permision.find().then(objs => res.status(200).json({

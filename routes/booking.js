@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/copy');
+const controller = require('../controllers/bookings');
 
 /* GET users listing. */
 router.get('/', controller.list);
@@ -11,7 +11,7 @@ router.post('/', controller.create);
 
 router.put('/:id', controller.replace);
 
-router.patch('/:id', controller.update);
+//router.patch('/:id', controller.update);
 
 router.delete('/:id', controller.destroy);
 
